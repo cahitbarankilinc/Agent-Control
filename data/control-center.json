@@ -1,0 +1,99 @@
+{
+  "missions": [
+    {
+      "id": "2beb7806-6fe8-45cc-85c9-b4eb27154291",
+      "name": "Mission Control Core",
+      "slug": "mission-control-core",
+      "description": "OpenClaw mission control ürününün ana operasyon, pipeline ve agent orkestrasyon alanı.",
+      "createdAt": 1773087911869,
+      "updatedAt": 1773087911869,
+      "color": "#67e8f9",
+      "status": "active"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "cdd338db-8a6b-4fe5-8996-1eb62670110e",
+      "missionId": "2beb7806-6fe8-45cc-85c9-b4eb27154291",
+      "title": "Cron risk sweep",
+      "agentId": "main",
+      "prompt": "Review all cron jobs and surface risks, failures and bottlenecks.",
+      "createdAt": 1773087934321,
+      "updatedAt": 1773087934321,
+      "status": "draft",
+      "schedule": {
+        "mode": "none"
+      },
+      "runs": []
+    }
+  ],
+  "missionAgents": [
+    {
+      "id": "b3f7d0c9-a98e-42fd-8db9-d8467fdc5bc1",
+      "missionId": "2beb7806-6fe8-45cc-85c9-b4eb27154291",
+      "agentId": "main",
+      "source": "imported",
+      "role": "Primary mission operator for dashboard oversight, task execution and escalation.",
+      "notes": "Imported as core operator.",
+      "createdAt": 1773087932357
+    }
+  ],
+  "pipelines": [
+    {
+      "id": "dbb46753-f3b0-49cb-b44b-bd7c8a008a1f",
+      "missionId": "2beb7806-6fe8-45cc-85c9-b4eb27154291",
+      "name": "Daily ops radar",
+      "description": "Watch sessions, cron failures and mission drift.",
+      "loop": {
+        "mode": "every",
+        "value": "15m"
+      },
+      "nodes": [
+        {
+          "id": "4c65297a-f0e2-43e3-990e-237bcf8646f6",
+          "label": "Trigger",
+          "type": "trigger",
+          "config": {
+            "event": "manual-or-scheduled"
+          }
+        },
+        {
+          "id": "45230de7-efd1-493c-a846-dc61795e4a91",
+          "label": "main",
+          "type": "agent",
+          "config": {
+            "agentId": "main",
+            "prompt": "Inspect live operations and summarize urgent issues."
+          }
+        },
+        {
+          "id": "7ad82e8b-1927-40f6-927f-3ecd337a7743",
+          "label": "Review / route",
+          "type": "decision",
+          "config": {
+            "rule": "human-readable result"
+          }
+        },
+        {
+          "id": "a5d2baf5-5e46-4748-8314-62ddf9e27b9e",
+          "label": "Loop",
+          "type": "loop",
+          "config": {
+            "mode": "every",
+            "value": "15m"
+          }
+        },
+        {
+          "id": "6a53a7bd-d87f-415a-807b-b1da0b31f4e9",
+          "label": "Deliver",
+          "type": "deliver",
+          "config": {
+            "mode": "dashboard"
+          }
+        }
+      ],
+      "createdAt": 1773087933335,
+      "updatedAt": 1773087933335
+    }
+  ]
+}

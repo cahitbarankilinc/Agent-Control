@@ -1,3 +1,5 @@
+export type AgentStatus = 'online' | 'idle' | 'offline';
+
 export type AgentSummary = {
   id: string;
   model?: string;
@@ -8,7 +10,7 @@ export type AgentSummary = {
   lastActiveHuman?: string;
   sessionCount: number;
   activeSessionCount: number;
-  status: 'online' | 'idle' | 'offline';
+  status: AgentStatus;
   latestSessionKey?: string;
 };
 
@@ -32,7 +34,7 @@ export type ActivityItem = {
   detail: string;
   at: number;
   kind: 'session' | 'cron';
-  status: 'online' | 'idle' | 'offline';
+  status: AgentStatus;
 };
 
 export type TaskRun = {
@@ -46,6 +48,7 @@ export type TaskRun = {
 
 export type MissionTask = {
   id: string;
+  missionId: string;
   title: string;
   agentId: string;
   prompt: string;
@@ -62,16 +65,67 @@ export type MissionTask = {
   runs: TaskRun[];
 };
 
+export type PipelineNode = {
+  id: string;
+  label: string;
+  type: 'trigger' | 'agent' | 'decision' | 'loop' | 'deliver';
+  config: Record<string, string>;
+};
+
+export type MissionPipeline = {
+  id: string;
+  missionId: string;
+  name: string;
+  description?: string;
+  loop?: {
+    mode: 'none' | 'every' | 'cron';
+    value?: string;
+  };
+  nodes: PipelineNode[];
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type MissionAgentBinding = {
+  id: string;
+  missionId: string;
+  agentId: string;
+  source: 'imported' | 'created';
+  role: string;
+  primaryModel?: string;
+  fallbackModel?: string;
+  workspacePath?: string;
+  notes?: string;
+  createdAt: number;
+};
+
+export type Mission = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  createdAt: number;
+  updatedAt: number;
+  color: string;
+  status: 'planning' | 'active' | 'paused';
+};
+
 export type DashboardOverview = {
   generatedAt: number;
   agents: AgentSummary[];
   cronJobs: CronJobSummary[];
   activity: ActivityItem[];
   tasks: MissionTask[];
+  missions: Mission[];
+  missionAgents: MissionAgentBinding[];
+  pipelines: MissionPipeline[];
+  availableModels: string[];
   metrics: {
     totalAgents: number;
     onlineAgents: number;
     activeSessions: number;
     totalCronJobs: number;
+    totalMissions: number;
+    totalPipelines: number;
   };
 };
